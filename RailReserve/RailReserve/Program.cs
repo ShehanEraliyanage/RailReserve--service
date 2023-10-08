@@ -7,6 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 using RailReserve.Model;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Text;
+using RailReserve.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -39,6 +40,8 @@ var mongoDbIdentityConfig = new MongoDbIdentityConfiguration
     }
 };
 
+
+
 builder.Services.ConfigureMongoDbIdentity<User, Role, Guid>(mongoDbIdentityConfig)
     .AddUserManager<UserManager<User>>()
     .AddSignInManager<SignInManager<User>>()
@@ -50,7 +53,7 @@ builder.Services.ConfigureMongoDbIdentityUserOnly<Traveler, Guid>(mongoDbIdentit
     .AddSignInManager<SignInManager<Traveler>>()
     .AddDefaultTokenProviders();
 
-
+builder.Services.AddScoped<ITravelerService, TravelerService>();
 
 
 
@@ -78,7 +81,6 @@ builder.Services.AddAuthentication(x =>
 
     };
 });
-
 
 
 builder.Services.AddControllers();

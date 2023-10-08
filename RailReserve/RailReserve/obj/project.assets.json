@@ -2112,11 +2112,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\dev\\asp\\RailReserve\\RailReserve\\RailReserve.csproj",
+      "projectUniqueName": "D:\\Github\\railreserve--service\\RailReserve\\RailReserve\\RailReserve.csproj",
       "projectName": "RailReserve",
-      "projectPath": "D:\\dev\\asp\\RailReserve\\RailReserve\\RailReserve.csproj",
+      "projectPath": "D:\\Github\\railreserve--service\\RailReserve\\RailReserve\\RailReserve.csproj",
       "packagesPath": "C:\\Users\\ASUS\\.nuget\\packages\\",
-      "outputPath": "D:\\dev\\asp\\RailReserve\\RailReserve\\obj\\",
+      "outputPath": "D:\\Github\\railreserve--service\\RailReserve\\RailReserve\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\ASUS\\AppData\\Roaming\\NuGet\\NuGet.Config",
