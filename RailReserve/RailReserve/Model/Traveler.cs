@@ -12,5 +12,6 @@ namespace RailReserve.Model
        
         public string NIC { get; set; } = string.Empty;
         public string FullName { get; set; } = string.Empty;
+        public string Status { get; set; } = string.Empty;
     }
 }

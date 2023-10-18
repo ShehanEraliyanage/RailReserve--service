@@ -1,9 +1,7 @@
 {
   "ExpandedNodes": [
     "",
-    "\\RailReserve",
-    "\\RailReserve\\Controllers",
-    "\\RailReserve\\Dtos"
+    "\\RailReserve"
   ],
   "PreviewInSolutionExplorer": false
 }
