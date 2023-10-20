@@ -14,5 +14,7 @@ namespace RailReserve.Repository
         public Task<ResponsData> UpdateAsync(Schedule schedule);
 
         public Task<ResponsData> Removeasync(string id);
+
+        public Task<ResponsData> GetSearchAsync(ScheduleSearchRequest schedule);
     }
 }

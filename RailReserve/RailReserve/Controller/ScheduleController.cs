@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using RailReserve.Dto;
 using RailReserve.Model;
 using RailReserve.Repository;
 using RailReserve.Service;
@@ -46,6 +47,13 @@ namespace RailReserve.Controller
         public async Task<IActionResult> Delete(string id)
         {
             var result = await _scheduleService.Removeasync(id);
+            return result.Success ? Ok(result) : BadRequest(result);
+        }
+      
+        [HttpPost("search")]
+        public async Task<IActionResult> Search(ScheduleSearchRequest schedule)
+        {
+            var result = await _scheduleService.GetSearchAsync(schedule);
             return result.Success ? Ok(result) : BadRequest(result);
         }
 

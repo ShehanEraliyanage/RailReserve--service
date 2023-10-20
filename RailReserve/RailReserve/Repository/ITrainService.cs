@@ -16,6 +16,5 @@ namespace RailReserve.Repository
 
         public Task<ResponsData> Removeasync(string id);
 
-        public Task<ResponsData> GetSearchAsync(string from, string to);
     }
 }
