@@ -215,10 +215,10 @@ namespace RailReserve.Service
 
                 var result = await _driverCollection.Find
                     (x => x.startingPlace == schedule.startingPlace && x.destination == schedule.destination).ToListAsync();
-                if (result is null) return new ResponsData
+                if (result.Count == 0) return new ResponsData
                 {
                     Success = false,
-                    Message = "No data",
+                    Message = "No Schedule",
                     Data = null
                 };
 
