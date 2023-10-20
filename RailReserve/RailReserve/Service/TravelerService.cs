@@ -3,6 +3,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using MongoDB.Driver;
 using RailReserve.Configurations;
+using RailReserve.Dto;
 using RailReserve.Dtos;
 using RailReserve.Model;
 using System.IdentityModel.Tokens.Jwt;
@@ -70,7 +71,9 @@ namespace RailReserve.Service
             {
 
                 var user = await _travelerManager.FindByEmailAsync(request.Email);
-                if (user is null) return new TravelerLoginResponse {  Success = false, Message = "Invalid email/password" };
+                if (user is null) return new TravelerLoginResponse { Success = false, Message = "Invalid email/password" };
+
+                if (user.Status.Equals("Deactive")) return new TravelerLoginResponse { Success = false, Message = "User Acount Deactive.." };
 
                 //all is well if ew reach here
                 var claims = new List<Claim>
@@ -103,7 +106,7 @@ namespace RailReserve.Service
                     Message = "Login Successful",
                     Email = user?.Email,
                     Success = true,
-                    UserId = user?.Id.ToString()
+                    nic = user?.NIC,
                 };
             }
             catch (Exception ex)
@@ -112,8 +115,152 @@ namespace RailReserve.Service
                 return new TravelerLoginResponse { Success = false, Message = ex.Message };
             }
 
-
         }
+
+
+
+            public async Task<ResponsData> DeactiveAsync(String nic)
+            {
+                try
+                {
+                var traveler = await this.GetAsync(nic);
+
+                if (traveler is null) return new ResponsData
+                {
+                    Success = false,
+                    Message = "No data",
+                    Data = null
+                };
+
+                var filter = Builders<Traveler>.Filter
+                        .Eq(travalere => travalere.NIC, nic);
+
+                    var update = Builders<Traveler>.Update
+                        .Set(travalere => travalere.Status, "Deactive");
+
+                var result = await this.GetAsync(nic);
+                if (result.Success.Equals(true))
+                {
+                    await _driverCollection.UpdateOneAsync(filter, update);
+                }
+
+                return await GetAsync(nic);
+            }
+                catch (Exception ex)
+                {
+                    return new ResponsData
+                    {
+                        Success = false,
+                        Message = ex.ToString(),
+                        Data = null
+                    };
+                }
+            }
+
+
+
+        public async Task<ResponsData> ActiveAsync(String nic)
+        {
+            try
+            {
+                var traveler = await this.GetAsync(nic);
+
+                if (traveler is null) return new ResponsData
+                {
+                    Success = false,
+                    Message = "No data",
+                    Data = null
+                };
+
+                var filter = Builders<Traveler>.Filter
+                        .Eq(travalere => travalere.NIC, nic);
+
+                var update = Builders<Traveler>.Update
+                    .Set(travalere => travalere.Status, "Active");
+
+                var result = await this.GetAsync(nic);
+                if (result.Success.Equals(true))
+                {
+                    await _driverCollection.UpdateOneAsync(filter, update);
+                }
+
+                return await GetAsync(nic);
+            }
+            catch (Exception ex)
+            {
+                return new ResponsData
+                {
+                    Success = false,
+                    Message = ex.ToString(),
+                    Data = null
+                };
+            }
+        }
+
+
+        public async Task<ResponsData> GetAsync(string nic)
+            {
+                try
+                {
+                   
+                    var result = await _driverCollection.Find(x => x.NIC == nic).FirstOrDefaultAsync();
+
+                    if (result is null) return new ResponsData
+                    {
+                        Success = false,
+                        Message = "No data",
+                        Data = null
+                    };
+
+                    return new ResponsData
+                    {
+                        Success = true,
+                        Message = "Success",
+                        Data = result
+                    };
+                }
+                catch (Exception ex)
+                {
+                    return new ResponsData
+                    {
+                        Success = false,
+                        Message = ex.ToString(),
+                        Data = null
+                    };
+                }
+            }
+
+
+
+        public async Task<ResponsData> GetAsync()
+        {
+            try
+            {
+                var result = await _driverCollection.Find(_ => true).ToListAsync();
+
+                if (result.Count == 0) return new ResponsData
+                {
+                    Success = false,
+                    Message = "No data",
+                    Data = null
+                };
+
+                return new ResponsData { Success = true, Message = "Success", Data = result };
+
+            }
+            catch (Exception ex)
+            {
+                return new ResponsData
+                {
+                    Success = false,
+                    Message = ex.ToString(),
+                    Data = null
+                };
+            }
+        }
+
+
+
 
     }
 }

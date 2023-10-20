@@ -208,6 +208,39 @@ namespace RailReserve.Service
         }
 
 
+        public async Task<ResponsData> GetSearchAsync(string from, string to)
+        {
+            try
+            {
+
+                var result = await _driverCollection.Find(x => x.startingPlace == from && x.destination == to).FirstOrDefaultAsync();
+
+                if (result is null) return new ResponsData
+                {
+                    Success = false,
+                    Message = "No data",
+                    Data = null
+                };
+
+                return new ResponsData
+                {
+                    Success = true,
+                    Message = "Success",
+                    Data = result
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponsData
+                {
+                    Success = false,
+                    Message = ex.ToString(),
+                    Data = null
+                };
+            }
+        }
+
+
 
         //public async Task<List<Schedule>> GetAsync() =>
         //    await _driverCollection.Find(_ => true).ToListAsync();

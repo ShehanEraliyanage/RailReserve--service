@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using RailReserve.Dtos;
 using RailReserve.Model;
+using RailReserve.Repository;
 using RailReserve.Service;
 using System.Net;
 
@@ -38,5 +39,35 @@ namespace RailReserve.Controllers
 
 
         }
+
+        [HttpGet("deactive/{id}")]
+        public async Task<IActionResult> DeactiveTraveler(string id)
+        {
+            var result = await _travelerService.DeactiveAsync(id);
+            return result.Success ? Ok(result) : BadRequest(result);
+        }
+
+        [HttpGet("active/{id}")]
+        public async Task<IActionResult> ActiveTraveler(string id)
+        {
+            var result = await _travelerService.ActiveAsync(id);
+            return result.Success ? Ok(result) : BadRequest(result);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Get()
+        {
+            var result = await _travelerService.GetAsync();
+            return result.Success ? Ok(result) : BadRequest(result);
+        }
+
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get(string id)
+        {
+            var result = await _travelerService.GetAsync(id);
+            return result.Success ? Ok(result) : BadRequest(result);
+        }
+
     }
 }
