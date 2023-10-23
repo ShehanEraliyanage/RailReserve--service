@@ -215,20 +215,40 @@ namespace RailReserve.Service
                 };
 
                 var result = await this.GetAsync(id);
-
+                DateTime currentDate = DateTime.Now;
                 if (result.Success.Equals(false))
                 {
                     return result;
                 }
-
-                await _driverCollection.DeleteOneAsync(x => x.id == id);
-
-                return new ResponsData
+                else
                 {
-                    Success = true,
-                    Message = "Success",
-                    Data = result.Data
-                };
+                    Reservation reservationCheck = (Reservation)result.Data;
+                    DateTime reservationDate = DateTime.Parse(reservationCheck.reservationDate);
+                    int daysDifference = (reservationDate - currentDate).Days;
+
+                    if (daysDifference >= 5)
+                    {
+                        await _driverCollection.DeleteOneAsync(x => x.id == id);
+                        return new ResponsData
+                        {
+                            Success = true,
+                            Message = "Success",
+                            Data = result.Data
+                        };
+                    }
+                    else
+                    {
+                        return new ResponsData
+                        {
+                            Success = false,
+                            Message = "Reservation must be at least 5 days in advance from the current date.",
+                            Data = null
+                        };
+                    }
+                }
+
+
+              
             }
             catch (Exception ex)
             {
