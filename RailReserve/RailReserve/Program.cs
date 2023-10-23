@@ -64,6 +64,17 @@ builder.Services.AddScoped<IReservationService , ReservationService>();
 
 builder.Services.Configure<DatabaseSettings>(builder.Configuration.GetSection("MongoDatabase"));
 
+// Add CORS configuration
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(builder =>
+    {
+        builder.AllowAnyOrigin()
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
+
 builder.Services.AddAuthentication(x =>
 {
     x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -102,7 +113,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+app.UseCors();
 app.UseHttpsRedirection();
 app.UseAuthentication();
 

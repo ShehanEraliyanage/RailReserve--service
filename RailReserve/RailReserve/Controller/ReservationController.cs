@@ -48,10 +48,17 @@ namespace RailReserve.Controller
             return result.Success ? Ok(result) : BadRequest(result);
         }
 
-        [HttpGet("GetByTravelerID/{id}")]
-        public async Task<IActionResult> GetByTravelerID(string id)
+        [HttpGet("GetPendingByTravelerID/{id}")]
+        public async Task<IActionResult> GetPendingByTravelerID(string id)
         {
-            var result = await _reservationService.GetByTravelerIDAsync(id);
+            var result = await _reservationService.GetPendingByTravelerIDAsync(id);
+            return result.Success ? Ok(result) : BadRequest(result);
+        }
+
+        [HttpGet("GetFineshByTravelerID/{id}")]
+        public async Task<IActionResult> GetFineshByTravelerID(string id)
+        {
+            var result = await _reservationService.GetFineshByTravelerIDAsync(id);
             return result.Success ? Ok(result) : BadRequest(result);
         }
 

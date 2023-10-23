@@ -15,7 +15,9 @@ namespace RailReserve.Repository
 
         public Task<ResponsData> Removeasync(string id);
 
-        public  Task<ResponsData> GetByTravelerIDAsync(string id);
+        public  Task<ResponsData> GetPendingByTravelerIDAsync(string id);
+
+        public Task<ResponsData> GetFineshByTravelerIDAsync(string id);
 
         public Task<ResponsData> GetByScheduleIDAsync(string id);
     }

@@ -241,23 +241,16 @@ namespace RailReserve.Service
             }
         }
 
-        public async Task<ResponsData> GetByTravelerIDAsync(string id)
+        public async Task<ResponsData> GetPendingByTravelerIDAsync(string id)
         {
             try
             {
-                if (id.Length > 5) return new ResponsData
+                var result = await _driverCollection.Find(x => x.travelerId == id && x.bookingStatus == "p").ToListAsync();
+
+                if (result.Count == 0) return new ResponsData
                 {
                     Success = false,
-                    Message = "Invalid traveler id",
-                    Data = null
-                };
-
-                var result = await _driverCollection.Find(x => x.travelerId == id).FirstOrDefaultAsync();
-
-                if (result is null) return new ResponsData
-                {
-                    Success = false,
-                    Message = "No data",
+                    Message = "No reservation",
                     Data = null
                 };
 
@@ -278,6 +271,40 @@ namespace RailReserve.Service
                 };
             }
         }
+
+
+
+        public async Task<ResponsData> GetFineshByTravelerIDAsync(string id)
+        {
+            try
+            {
+                var result = await _driverCollection.Find(x => x.travelerId == id && x.bookingStatus == "f").ToListAsync();
+
+                if (result.Count == 0) return new ResponsData
+                {
+                    Success = false,
+                    Message = "No reservation",
+                    Data = null
+                };
+
+                return new ResponsData
+                {
+                    Success = true,
+                    Message = "Success",
+                    Data = result
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponsData
+                {
+                    Success = false,
+                    Message = ex.ToString(),
+                    Data = null
+                };
+            }
+        }
+
 
         public async Task<ResponsData> GetByScheduleIDAsync(string id)
         {
@@ -316,5 +343,6 @@ namespace RailReserve.Service
                 };
             }
         }
+
     }
 }
