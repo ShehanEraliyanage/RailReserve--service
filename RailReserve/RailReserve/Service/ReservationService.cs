@@ -86,6 +86,22 @@ namespace RailReserve.Service
         {
             try
             {
+
+                DateTime bookingDate = DateTime.Parse(reservation.bookingDate);
+                DateTime reservationDate = DateTime.Parse(reservation.reservationDate);
+
+                // Calculate the difference in days
+                int daysDifference = (reservationDate - bookingDate).Days;
+
+                // Check if the reservation is within 30 days from the booking date
+                if (!(daysDifference >= 0 && daysDifference <= 30)) return new ResponsData
+                {
+                    Success = false,
+                    Message = "Reservation date must be within 30 days from the booking date.",
+                    Data = null
+                };
+
+
                 if (reservation.id.Equals("") || reservation.id.Equals(null)) return new ResponsData
                 {
                     Success = false,
@@ -126,6 +142,8 @@ namespace RailReserve.Service
         {
             try
             {
+               
+
                 if (reservation.id.Equals("") || reservation.id.Equals(null)) return new ResponsData
                 {
                     Success = false,
@@ -140,10 +158,30 @@ namespace RailReserve.Service
                     Data = null
                 };
 
+
+                DateTime currentDate = DateTime.Now;
                 var result = await this.GetAsync(reservation.id);
+
                 if (result.Success.Equals(true))
                 {
-                    await _driverCollection.ReplaceOneAsync(x => x.id == reservation.id, reservation);
+                    Reservation reservationCheck = (Reservation)result.Data;
+                    DateTime reservationDate = DateTime.Parse(reservationCheck.reservationDate);
+                    int daysDifference = (reservationDate - currentDate).Days;
+
+                    if (daysDifference >= 5)
+                    {
+                        await _driverCollection.ReplaceOneAsync(x => x.id == reservation.id, reservation);
+                    }
+                    else
+                    {
+                        return new ResponsData
+                        {
+                            Success = false,
+                            Message = "Reservation must be at least 5 days in advance from the current date.",
+                            Data = null
+                        };
+                    }
+                   
                 }
 
                 return await GetAsync(reservation.id);
